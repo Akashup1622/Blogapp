@@ -3,7 +3,7 @@ import Layout  from "./Pages/Layout";
 import { Signup } from "./Pages/Signup";
 import  Home  from "./Pages/Home";
 import { Login } from "./Pages/Login";
-import { Dashboard } from "./Components/Dashboard/Dashboard";
+import  {Dashboard}  from "./Components/Dashboard/Dashboard";
 import { ProtectedRoute } from "./Components/ProtectedRoute";
 import { CreatePost } from "./Components/Dashboard/CreatePost";
 

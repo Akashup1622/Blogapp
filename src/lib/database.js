@@ -32,7 +32,7 @@ export const getUserData = async ( UserID) => {
     let result = await tablesDB.listRows({
       databaseId: dbid,
       tableId: userColl,
-      queries: [Query.equal("UserId", UserID )],
+      queries: [Query.equal("UserId", UserID)],
     })
 
     return result.rows[0]; // ✅ mostly single user

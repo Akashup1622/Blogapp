@@ -40,7 +40,7 @@ const Homeblogcard = ({ post }) => {
 
         {/* Read more */}
         <Link
-          to={`/blogdetail/${post.userId}/${post.$id}`}
+          to={`/blogdetail/${post.userid}/${post.$id}`}
           className="inline-flex items-center gap-2 text-sm font-semibold text-indigo-600 hover:text-indigo-800"
         >
           Read more
