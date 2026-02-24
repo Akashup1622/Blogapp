@@ -9,7 +9,11 @@ const Home = () => {
 
   const Allpost = async () => {
     const res = await getAllPosts();
-    setPosts(res?.rows || [].slice(0, 5));
+
+    // Take only first 5 posts
+    const limitedPosts = (res?.rows || []).slice(0, 4);
+
+    setPosts(limitedPosts);
   };
 
   useEffect(() => {

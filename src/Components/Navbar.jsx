@@ -11,18 +11,27 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const Logout = async () => {
+ const Logout = async () => {
   try {
-    await account.deleteSession("current");
+    // Check if user is logged in
+    const session = await account.getSession("current");
+
+    if (session) {
+      await account.deleteSession("current");
+    }
+
     dispatch(logOut());
     toast.success("Logout successful");
     navigate("/login");
   } catch (error) {
     console.error("Logout error:", error);
-    toast.error("Logout failed");
+
+    // If already logged out, still clear frontend state
+    dispatch(logOut());
+    navigate("/login");
+    toast.success("Logged out");
   }
 };
-
   return (
     <nav className="sticky top-0 z-50 bg-white shadow-md">
       <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">

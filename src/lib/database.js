@@ -5,8 +5,8 @@ const dbid = import.meta.env.VITE_DATABASE_ID;
 const userColl = import.meta.env.VITE_COLLECTION_USER_ID;
 const bucketid=import.meta.env.VITE_BUCKET_ID
 const postColl = import.meta.env.VITE_COLLECTION_POST;
-const commentColl=import.meta.env.VITE_COMMENT_COLLECTION_ID
-const likeColl=import.meta.env.VITE_LIKE_COLLECTION_ID
+// const commentColl=import.meta.env.VITE_COMMENT_COLLECTION_ID
+// const likeColl=import.meta.env.VITE_LIKE_COLLECTION_ID
 import { tablesDB } from "./appwrite";
 export const blogCategories = [
   "Technology",
@@ -223,6 +223,7 @@ export const getAllPosts=async()=>{
 }
 
 
+
 // post comment
 
 export const postComment=async(data)=>{
@@ -262,9 +263,5 @@ export const postComment=async(data)=>{
   }
 }
 
-// get all comment for a post
 
-// export const getAllCommentForPost= async(postid)=>{
-//    try
-// }
  

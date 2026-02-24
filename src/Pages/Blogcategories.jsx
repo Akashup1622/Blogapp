@@ -1,45 +1,55 @@
-import React, { use } from 'react'
+import React, { useState } from 'react'
 import { useEffect } from 'react'
 import { useParams } from 'react-router-dom';
 import { getAllPosts } from '../lib/database';
 import   Homeblogcard  from '../Components/Dashboard/Homeblogcard';
+     
 
 const Blogcategories = () => {
+  const { category } = useParams(); // ✅ FIXED
+  const [posts, setPosts] = useState([]);
 
-    const {Blogcategories}=useParams()
-    console.log(Blogcategories)
-    const [posts,setPosts]=React.useState([])
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const res = await getAllPosts();
 
+        console.log("URL Category:", category);
+        console.log("API Response:", res);
 
-    useEffect(() => {
-        const fetchPosts=async()=>{
-            const posts=await getAllPosts()
-            console.log(posts)
-            const filterdata=posts.rows.filter((obj)=>obj.category===Blogcategories)
-            setPosts(filterdata)
-        }
-          fetchPosts()  
-    },[])
+        const allPosts = res?.rows || res?.documents || [];
 
+        const filterdata = allPosts.filter(
+          (obj) =>
+            obj.category?.toLowerCase().trim() ===
+            category?.toLowerCase().trim()
+        );
+
+        console.log("Filtered Posts:", filterdata);
+        setPosts(filterdata);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchPosts();
+  }, [category]);
 
   return (
     <>
-    <h2>
+      <h2>Posts related to {Blogcategories}</h2>
 
-        post related to {Blogcategories}
-        {
-            posts?.map((blog,index)=>{
-                return(
-                    <Homeblogcard post={blog}/>
-                )
-            })
-        
-        }
-    
-    </h2>
-    
+      <div className="grid grid-cols-3 gap-4">
+        {posts.length > 0 ? (
+          posts.map((blog) => (
+            <Homeblogcard key={blog.$id} post={blog} />
+          ))
+        ) : (
+          <p>No posts found for this category</p>
+        )}
+      </div>
     </>
-  )
-}
+  );
+};
 
 export default Blogcategories
