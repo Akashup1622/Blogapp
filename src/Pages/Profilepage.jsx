@@ -49,6 +49,7 @@ export const ProfilePage = () => {
       setProfilepreview(userData.profilePic);
     }
   }, [ProfilePic, userData]);
+  
 
   //  update profile
   const updateProfile = async (data) => {
