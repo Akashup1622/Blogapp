@@ -12,33 +12,50 @@ export const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const Signin = async (data) => {
+ const Signin = async (data) => {
+  try {
+    setLoading(true);
+
+    // 👉 delete old session (safe)
     try {
-      setLoading(true);
-
-      const session = await account.createEmailPasswordSession({
-        email: data.Email,
-         password:data.password,
-    });
-
-      const loginData = {
-        id: session.$id,
-        userId: session.userId,
-      };
-
-      localStorage.setItem("loginDetails", JSON.stringify(loginData));
-      dispatch(signin(loginData));
-
-      toast.success("Login successful");
-      navigate(`/dashboard/${session.userId}`);
-    } catch (error) {
-      toast.error("Invalid email or password");
-      console.error("Login error:", error);
-    } finally {
-      setLoading(false);
+      await account.deleteSession("current");
+    } catch (err) {
+      console.log("No active session");
     }
-  };
 
+    console.log("Form Data:", data);
+
+    // 👉 login
+    const session = await account.createEmailPasswordSession(
+      data.email,
+      data.password
+    );
+
+    // 👉 FETCH USER (IMPORTANT)
+    const user = await account.get();
+
+    // 👉 COMPLETE DATA
+    const loginData = {
+      id: session.$id,
+      userId: session.userId,
+      email: user.email,
+      name: user.name,
+    };
+
+    // 👉 store
+    localStorage.setItem("loginDetails", JSON.stringify(loginData));
+    dispatch(signin(loginData));
+
+    toast.success("Login successful");
+    navigate(`/dashboard/${session.userId}`);
+
+  } catch (error) {
+    toast.error(error.message);
+    console.error("Login error:", error);
+  } finally {
+    setLoading(false);
+  }
+};
   return (
     <section className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 px-4">
       <div className="w-full max-w-md bg-white/90 backdrop-blur-xl rounded-2xl shadow-2xl p-8">
@@ -59,11 +76,11 @@ export const Login = () => {
           {/* Email */}
           <div>
             <label className="block text-sm font-medium text-gray-600 mb-1">
-              Email
+              email
             </label>
             <input
               type="email"
-              {...register("Email")}
+              {...register("email")}
               placeholder="you@example.com"
               required
               className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"

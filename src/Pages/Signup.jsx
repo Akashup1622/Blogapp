@@ -3,7 +3,10 @@ import { useForm } from "react-hook-form";
 import { account, databases, tablesDB } from "../lib/appwrite";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import { ID, TablesDB } from "appwrite";
+import { ID } from "appwrite";
+
+const DATABASE_ID = import.meta.env.VITE_DATABASE_ID;
+const COLLECTION_ID = import.meta.env.VITE_COLLECTION_USER_ID;
 
 export const Signup = () => {
   const {
@@ -16,22 +19,41 @@ export const Signup = () => {
   const navigate = useNavigate();
 
   const onSubmit = async (data) => {
-    try {
-      setLoading(true);
-      console.log("Form Data:", data);
+  try {
+    setLoading(true);
 
-      // 👉 simulate API
-      await new Promise((res) => setTimeout(res, 1500));
+    // Create the account
+    const user = await account.create(
+      ID.unique(),
+      data.Email,
+      data.password,
+      data.FirstName + ' ' + data.LastName
+    );
 
-      alert("Signup Successful!");
-      navigate("/login");
-    } catch (err) {
-      console.error(err);
-      alert("Signup Failed");
-    } finally {
-      setLoading(false);
-    }
-  };
+    // Create user document in database
+    await tablesDB.createRow({
+      databaseId: DATABASE_ID,
+      tableId: COLLECTION_ID,
+      rowId: ID.unique(),
+      data: {
+        UserId: user.$id,
+        FirstName: data.FirstName,
+        LastName: data.LastName,
+        Email: data.Email,
+      }
+    });
+
+    toast.success("Signup Successful!");
+
+    navigate("/login");
+
+  } catch (err) {
+    console.error(err);
+    toast.error(err.message);
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <section className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 px-4">
