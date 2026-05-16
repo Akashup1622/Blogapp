@@ -2,78 +2,80 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const Homeblogcard = ({ post }) => {
+  const stripHtml = (html) => {
+    const doc = new DOMParser().parseFromString(html, "text/html");
+    return doc.body.textContent || "";
+  };
+
   return (
-    <div className="group relative w-full max-w-sm overflow-hidden rounded-3xl bg-white/80 backdrop-blur-lg border border-gray-200 shadow-lg transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl">
+    <div className="group relative w-full overflow-hidden rounded-[2.5rem] bg-white border border-slate-100 shadow-xl shadow-slate-200/40 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-violet-200/30 flex flex-col h-full">
       
       {/* Image Section */}
-      <div className="relative h-52 overflow-hidden">
+      <div className="relative h-60 overflow-hidden">
         <img
           src={post?.thumbnail || "https://via.placeholder.com/400x250"}
           alt={post?.title || "Blog"}
-          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+          className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
         />
 
-        {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+        {/* Premium Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/20 to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-500" />
 
-        {/* Category Badge (Optional) */}
-        <span className="absolute top-4 left-4 rounded-full bg-indigo-600 px-3 py-1 text-xs font-medium text-white shadow-md">
-          Blog
+        {/* Category Badge */}
+        <span className="absolute top-5 left-5 bg-white/90 backdrop-blur-md text-violet-600 text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-2xl shadow-sm">
+           {post?.category || "Article"}
         </span>
-
-        {/* Title on Image */}
-        <h3 className="absolute bottom-4 left-4 right-4 text-xl font-bold text-white leading-snug line-clamp-2">
-          {post?.title || "Blog Title"}
-        </h3>
       </div>
 
       {/* Content Section */}
-      <div className="p-5">
+      <div className="p-8 flex flex-col flex-1">
         
         {/* Author + Read Time */}
-        <div className="mb-3 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-semibold">
+        <div className="mb-6 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="h-9 w-9 rounded-xl bg-violet-50 border border-violet-100 flex items-center justify-center text-violet-600 font-bold text-sm">
               {post?.author?.charAt(0) || "A"}
             </div>
-            <span className="text-sm font-medium text-gray-700">
+            <span className="text-xs font-bold text-slate-700 uppercase tracking-wider">
               {post?.author || "Admin"}
             </span>
           </div>
 
-          <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-md">
-            ⏱ 5 min read
-          </span>
+          <div className="bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-100">
+             <span className="text-[10px] font-black text-slate-400 uppercase tracking-tight">
+               ~{Math.max(1, Math.ceil(stripHtml(post?.blogcontent || "").length / 800))} min read
+             </span>
+          </div>
         </div>
 
+        {/* Blog Title */}
+        <h3 className="text-2xl font-black text-slate-900 leading-tight mb-4 group-hover:text-violet-600 transition-colors line-clamp-2">
+          {post?.title || "Untitled Masterpiece"}
+        </h3>
+
         {/* Blog Preview */}
-        <div
-          className="mb-4 text-sm text-gray-600 line-clamp-3 leading-relaxed"
-          dangerouslySetInnerHTML={{
-            __html: post?.blogcontent || "No content available...",
-          }}
-        />
+        <p className="text-sm text-slate-500 font-medium line-clamp-3 leading-relaxed mb-8 flex-1">
+          {stripHtml(post?.blogcontent || "Dive into this insightful article and explore the fascinating world of ideas...")}
+        </p>
 
-        {/* Divider */}
-        <div className="h-px w-full bg-gray-200 mb-4" />
+        {/* Action Link */}
+        <div className="pt-6 border-t border-slate-50">
+          <Link
+            to={`/blogdetail/${post.userid}/${post.$id}`}
+            className="flex items-center justify-between group/btn"
+          >
+            <span className="text-sm font-bold text-slate-900 group-hover/btn:text-violet-600 transition-colors">
+              Continue Reading
+            </span>
 
-        {/* Read More Button */}
-        <Link
-          to={`/blogdetail/${post.userid}/${post.$id}`}
-          className="flex items-center justify-between text-sm font-semibold text-indigo-600 hover:text-indigo-800 transition-all duration-300"
-        >
-          <span className="flex items-center gap-2">
-            Read Full Article
-          </span>
-
-          <span className="text-lg transition-transform duration-300 group-hover:translate-x-2">
-            →
-          </span>
-        </Link>
+            <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center group-hover/btn:bg-violet-600 group-hover/btn:text-white transition-all duration-300 shadow-sm group-hover/btn:shadow-violet-200">
+               <span className="text-xl transform group-hover/btn:translate-x-1 transition-transform">
+                 →
+               </span>
+            </div>
+          </Link>
+        </div>
       </div>
-
-      {/* Hover Glow Effect */}
-      <div className="pointer-events-none absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition duration-500 bg-gradient-to-r from-indigo-500/10 to-pink-500/10" />
     </div>
   );
 };

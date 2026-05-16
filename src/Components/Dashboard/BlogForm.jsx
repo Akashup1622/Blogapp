@@ -68,115 +68,126 @@ const createPost=(data)=>{
     }
   },[defaultValue])
   return (
-  <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-sky-100 to-emerald-100 flex justify-center py-10 px-4">
-
-    {/* Glass Card */}
-    <div className="w-full max-w-4xl backdrop-blur-lg bg-white/70 border border-white/40 rounded-2xl shadow-xl overflow-hidden">
-
-      {/* Header */}
-      <div className="bg-gradient-to-r from-indigo-600 to-emerald-500 p-6">
-        <h2 className="text-3xl font-bold text-white text-center">
-          {isEdit ? "✏️ Edit Blog Post" : "📝 Create New Blog Post"}
-        </h2>
-      </div>
-
+    <div className="w-full">
       {/* Form */}
-      <form onSubmit={handleSubmit(submitPost)} className="p-8 space-y-8">
+      <form onSubmit={handleSubmit(submitPost)} className="space-y-10">
 
-        {/* Thumbnail */}
-        <div className="bg-white p-5 rounded-xl shadow-sm">
-          <label className="block font-semibold mb-3 text-gray-700">Thumbnail</label>
-          <input
-            type="file"
-            accept="image/*"
-            {...register("thumbnail")}
-            className="block w-full border rounded-lg p-2"
-          />
+        {/* Thumbnail Upload Area */}
+        <div className="space-y-4">
+          <label className="text-sm font-bold text-slate-700 ml-1 block">Featured Thumbnail</label>
+          <div className="flex flex-col md:flex-row items-center gap-8 bg-slate-50/50 p-6 rounded-[2rem] border border-slate-100 border-dashed hover:border-violet-200 transition-colors group">
+            <div className="relative group/img overflow-hidden rounded-2xl w-full md:w-56 h-36 bg-slate-100 border border-slate-100">
+               {thumbnailPreview ? (
+                <img
+                  src={thumbnailPreview}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover/img:scale-110"
+                />
+               ) : (
+                <div className="w-full h-full flex flex-col items-center justify-center text-slate-400">
+                   <span className="text-4xl">🖼️</span>
+                   <span className="text-[10px] font-black uppercase tracking-widest mt-2">No Image</span>
+                </div>
+               )}
+            </div>
+            <div className="flex-1 space-y-4 text-center md:text-left">
+              <p className="text-xs font-medium text-slate-500 max-w-[200px]">Recommended: 1200x630px. High quality JPG or PNG.</p>
+              <label className="inline-block px-6 py-2.5 bg-white border border-slate-200 text-slate-700 rounded-xl text-sm font-bold cursor-pointer hover:bg-slate-50 transition-all shadow-sm">
+                Choose Image
+                <input
+                  type="file"
+                  accept="image/*"
+                  {...register("thumbnail")}
+                  className="hidden"
+                />
+              </label>
+            </div>
+          </div>
+        </div>
 
-          {thumbnailPreview && (
-            <img
-              src={thumbnailPreview}
-              className="mt-4 w-36 h-36 object-cover rounded-lg border shadow"
+        <div className="space-y-8">
+          {/* Title */}
+          <div className="space-y-2">
+            <label className="text-sm font-bold text-slate-700 ml-1">Article Title</label>
+            <input
+              type="text"
+              placeholder="Give your story a compelling title..."
+              {...register("title", { required: true })}
+              className="w-full px-6 py-4 rounded-2xl border border-slate-200 focus:border-violet-500 focus:ring-4 focus:ring-violet-500/10 focus:outline-none transition-all duration-200 bg-slate-50/50 text-xl font-bold placeholder:font-medium"
             />
-          )}
-        </div>
-
-        {/* Title */}
-        <div className="bg-white p-5 rounded-xl shadow-sm">
-          <label className="block font-semibold mb-2 text-gray-700">Title</label>
-          <input
-            type="text"
-            placeholder="Enter blog title"
-            {...register("title", { required: true })}
-            className="w-full border rounded-lg p-3 focus:ring-2 focus:ring-indigo-500 outline-none"
-          />
-        </div>
-
-        {/* Category & Status */}
-        <div className="grid md:grid-cols-2 gap-6">
-          <div className="bg-white p-5 rounded-xl shadow-sm">
-            <label className="block font-semibold mb-2 text-gray-700">Category</label>
-            <select
-              {...register("category")}
-              className="w-full border rounded-lg p-3"
-            >
-              {blogCategories.map((cat) => (
-                <option key={cat}>{cat}</option>
-              ))}
-            </select>
+            {errors.title && <p className="text-rose-500 text-xs font-bold ml-1 tracking-tight">A title is required</p>}
           </div>
 
-          <div className="bg-white p-5 rounded-xl shadow-sm">
-            <label className="block font-semibold mb-2 text-gray-700">Status</label>
-            <select
-              {...register("status")}
-              className="w-full border rounded-lg p-3"
-            >
-              <option value="draft">Draft</option>
-              <option value="publish">Publish</option>
-            </select>
+          {/* Category & Status */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="space-y-2">
+              <label className="text-sm font-bold text-slate-700 ml-1">Category</label>
+              <select
+                {...register("category")}
+                className="w-full px-6 py-4 rounded-2xl border border-slate-200 focus:border-violet-500 focus:ring-4 focus:ring-violet-500/10 focus:outline-none transition-all duration-200 bg-slate-50/50 font-bold text-slate-700 appearance-none"
+              >
+                {blogCategories.map((cat) => (
+                  <option key={cat}>{cat}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-bold text-slate-700 ml-1">Publication Status</label>
+              <select
+                {...register("status")}
+                className="w-full px-6 py-4 rounded-2xl border border-slate-200 focus:border-violet-500 focus:ring-4 focus:ring-violet-500/10 focus:outline-none transition-all duration-200 bg-slate-50/50 font-bold text-slate-700 appearance-none"
+              >
+                <option value="draft">Save as Draft</option>
+                <option value="publish">Publish Live</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Editor */}
+          <div className="space-y-2">
+            <label className="text-sm font-bold text-slate-700 ml-1 mb-2 block">Story Content</label>
+            <div className="rounded-3xl border border-slate-200 overflow-hidden">
+              <SunEditor
+                setContents={defaultValue?.blogcontent}
+                {...register("blogcontent")}
+                onChange={handleEditor}
+                setOptions={{
+                  minHeight: "400px",
+                  buttonList: [
+                    ["undo", "redo"],
+                    ["formatBlock", "font", "fontSize"],
+                    ["bold", "underline", "italic", "strike", "subscript", "superscript"],
+                    ["fontColor", "hiliteColor", "textStyle"],
+                    ["removeFormat"],
+                    ["align", "horizontalRule", "list", "lineHeight"],
+                    ["link", "image", "video"],
+                    ["fullScreen", "showBlocks", "codeView"],
+                  ],
+                }}
+              />
+            </div>
           </div>
         </div>
 
-        {/* Editor */}
-        <div className="bg-white p-5 rounded-xl shadow-sm">
-          <label className="block font-semibold mb-3 text-gray-700">
-            Blog Content
-          </label>
-          <SunEditor
-            setContents={defaultValue?.blogcontent}
-            {...register("blogcontent")}
-            onChange={handleEditor}
-            setOptions={{
-              minHeight: "300px",
-              buttonList: [
-                ["undo", "redo"],
-                ["bold", "underline", "italic"],
-                ["fontColor", "hiliteColor"],
-                ["align", "list"],
-                ["link", "image"],
-                ["fullScreen", "codeView"],
-              ],
-            }}
-          />
-        </div>
-
-        {/* Submit Bar */}
-        <div className="sticky bottom-0 bg-white/80 backdrop-blur border-t p-4 flex justify-center">
+        {/* Action Bar */}
+        <div className="flex justify-center pt-8 border-t border-slate-50">
           <button
             type="submit"
             disabled={loading}
-            className="px-10 py-3 rounded-full bg-gradient-to-r from-indigo-600 to-emerald-500 text-white font-semibold shadow-lg hover:scale-105 transition disabled:opacity-50"
+            className={`px-12 py-4 rounded-2xl text-white font-bold transition-all duration-300 shadow-xl shadow-violet-200/50 
+              ${loading
+                ? "bg-violet-400 cursor-not-allowed"
+                : "bg-violet-600 hover:bg-violet-700 active:scale-95"}
+            `}
           >
             {isEdit
-              ? loading ? "Updating..." : "Update Post"
-              : loading ? "Creating..." : "Create Post"}
+              ? loading ? "Saving Changes..." : "Update Publication"
+              : loading ? "Creating..." : "Launch Publication"}
           </button>
         </div>
 
       </form>
     </div>
-  </div>
-);
-
+  );
 }
+

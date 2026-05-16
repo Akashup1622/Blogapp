@@ -12,81 +12,80 @@ export const BlogCard = ({ deletepostById, postobj, userid }) => {
   };
 
   return (
-    <div className="group bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+    <div className="group bg-white rounded-[2rem] overflow-hidden border border-slate-100 shadow-xl shadow-slate-200/30 hover:shadow-2xl hover:shadow-violet-200/30 transition-all duration-500 hover:-translate-y-2 flex flex-col h-full">
       
       {/* Thumbnail Section */}
-      <div className="relative overflow-hidden">
+      <div className="relative h-56 overflow-hidden">
         <img
           src={postobj.thumbnail || "https://via.placeholder.com/400x250"}
           alt={postobj.title}
-          className="h-52 w-full object-cover transform group-hover:scale-105 transition duration-500"
+          className="h-full w-full object-cover transform group-hover:scale-110 transition duration-700 ease-out"
         />
 
         {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
 
-        {/* Category Badge (optional) */}
+        {/* Category Badge */}
         {postobj.category && (
-          <span className="absolute top-3 left-3 bg-indigo-600 text-white text-xs px-3 py-1 rounded-full shadow">
+          <span className="absolute top-4 left-4 bg-white/90 backdrop-blur-md text-violet-600 text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-xl shadow-sm">
             {postobj.category}
           </span>
         )}
+
+        {/* View Badge on Hover */}
+        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+           <Link 
+            to={`/blogdetail/${userid}/${postobj.$id}`}
+            className="bg-white text-slate-900 px-6 py-2.5 rounded-2xl font-bold text-sm shadow-xl flex items-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300"
+           >
+            <Eye size={18} className="text-violet-600" />
+            Read Article
+           </Link>
+        </div>
       </div>
 
-      {/* Content */}
-      <div className="p-5">
+      {/* Content Area */}
+      <div className="p-6 flex flex-col flex-1">
+        <div className="flex items-center gap-2 mb-3">
+          <CalendarDays size={14} className="text-slate-400" />
+          <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+            {new Date(postobj.$createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+          </span>
+        </div>
+
         {/* Title */}
-        <h2 className="text-xl font-bold text-gray-800 line-clamp-2 group-hover:text-indigo-600 transition">
+        <h2 className="text-xl font-black text-slate-900 line-clamp-2 leading-tight group-hover:text-violet-600 transition-colors mb-3">
           {postobj.title}
         </h2>
 
         {/* Description */}
-        <p className="text-sm text-gray-500 mt-3 line-clamp-3 leading-relaxed">
+        <p className="text-sm text-slate-500 line-clamp-3 leading-relaxed mb-6 font-medium">
           {stripHtml(postobj.blogcontent)}
         </p>
 
-        {/* Date & Read Info */}
-        <div className="flex items-center justify-between mt-4 text-xs text-gray-400">
+        {/* Spacer to push buttons to bottom */}
+        <div className="mt-auto pt-6 border-t border-slate-50 flex items-center justify-between">
           <div className="flex items-center gap-1">
-            <CalendarDays size={14} />
-            <span>
-              {new Date(postobj.$createdAt).toDateString()}
+            <span className="text-[10px] font-black text-violet-600 bg-violet-50 px-2 py-1 rounded-lg uppercase tracking-tight">
+              {Math.max(1, Math.ceil(stripHtml(postobj.blogcontent).length / 800))} min read
             </span>
           </div>
-
-          <span className="text-indigo-500 font-medium">
-            {Math.ceil(stripHtml(postobj.blogcontent).length / 500)} min read
-          </span>
-        </div>
-
-        {/* Divider */}
-        <div className="border-t my-4" />
-
-        {/* Action Buttons */}
-        <div className="flex items-center justify-between">
-          <Link
-            to={`/blogdetail/${userid}/${postobj.$id}`}
-            className="flex items-center gap-1 text-sm font-medium text-indigo-600 hover:text-indigo-800 transition"
-          >
-            <Eye size={16} />
-            View
-          </Link>
 
           <div className="flex gap-2">
             <Link
               to={`/editpost/${postobj.$id}`}
-              className="flex items-center gap-1 px-3 py-1.5 text-xs bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
+              className="p-2.5 bg-slate-50 text-slate-600 rounded-xl hover:bg-violet-600 hover:text-white transition-all duration-200"
+              title="Edit Post"
             >
-              <Pencil size={14} />
-              Edit
+              <Pencil size={16} />
             </Link>
 
             <button
               onClick={() => deletepostById(postobj.$id)}
-              className="flex items-center gap-1 px-3 py-1.5 text-xs bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
+              className="p-2.5 bg-slate-50 text-rose-500 rounded-xl hover:bg-rose-500 hover:text-white transition-all duration-200"
+              title="Delete Post"
             >
-              <Trash2 size={14} />
-              Delete
+              <Trash2 size={16} />
             </button>
           </div>
         </div>

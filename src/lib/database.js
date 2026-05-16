@@ -165,17 +165,15 @@ export const deletePostById=async(id)=>{
     }
 }
 
-// update user data
 export const updateUserData=async(UserId,userdata)=>{
     try{
-
       let url=""
-      const selectedFile=userdata.profilePic?.[0]
+      const selectedFile=userdata.ProfilePic?.[0]
          if(selectedFile instanceof File){
          const res= await storage.createFile({
             bucketId:bucketid,
-            fileId:UserId.unique(),
-            file:userdata.profilePic[0]
+            fileId:ID.unique(),
+            file:userdata.ProfilePic[0]
          });
         
         url=storage.getFileView({
@@ -184,19 +182,17 @@ export const updateUserData=async(UserId,userdata)=>{
          })
         }
         else{
-          url=userdata.profilePic
+          url=userdata.existingPic || ""
         }
      const res= await tablesDB.updateRow({
         databaseId:dbid,
         tableId:userColl,
         rowId:UserId,
         data:{
-             
                FirstName: userdata.FirstName,
                LastName: userdata.LastName,
-               
-               bio: userdata.bio,
-               profilePic: url
+               Bio: userdata.Bio,
+               ProfilePic: url
         }
    })
      return res

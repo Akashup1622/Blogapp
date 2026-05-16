@@ -1,5 +1,5 @@
 
-import React,{useState} from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Menu, X, LayoutDashboard, LogOut, User } from "lucide-react";
@@ -31,26 +31,27 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="sticky top-0 z-50 backdrop-blur-md bg-white/80 border-b shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 md:px-6 py-3 flex justify-between items-center">
-        
+    <nav className="sticky top-0 z-50 backdrop-blur-xl bg-white/70 border-b border-slate-200/60 shadow-sm">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
         {/* ===== Logo ===== */}
         <Link
           to="/"
-          className="flex items-center gap-2 text-2xl font-bold text-indigo-600 tracking-wide"
+          className="flex items-center gap-2 text-2xl font-extrabold text-slate-900 tracking-tight"
         >
-          <span className="bg-indigo-600 text-white px-2 py-1 rounded-lg">
-            B
+          <div className="bg-violet-600 text-white w-10 h-10 flex items-center justify-center rounded-xl shadow-lg shadow-violet-200 rotate-3 hover:rotate-0 transition-transform duration-300">
+            <span className="text-xl">B</span>
+          </div>
+          <span className="bg-clip-text text-transparent bg-gradient-to-r from-violet-600 to-indigo-600">
+            Blogify
           </span>
-          Blogify
         </Link>
 
         {/* ===== Desktop Menu ===== */}
-        <ul className="hidden md:flex items-center gap-8 text-[15px] font-medium">
+        <ul className="hidden md:flex items-center gap-10 text-[15px] font-semibold">
           <li>
             <Link
               to="/"
-              className="text-gray-700 hover:text-indigo-600 transition"
+              className="text-slate-600 hover:text-violet-600 transition-colors duration-200 flex items-center gap-1"
             >
               Home
             </Link>
@@ -60,7 +61,7 @@ const Navbar = () => {
             <li>
               <Link
                 to={`/dashboard/${user.userId}`}
-                className="flex items-center gap-1 text-gray-700 hover:text-indigo-600 transition"
+                className="flex items-center gap-2 text-slate-600 hover:text-violet-600 transition-colors duration-200"
               >
                 <LayoutDashboard size={18} />
                 Dashboard
@@ -69,37 +70,29 @@ const Navbar = () => {
           )}
 
           {!user ? (
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-4">
               <Link
                 to="/login"
-                className="px-4 py-2 rounded-lg border border-indigo-600 text-indigo-600 hover:bg-indigo-600 hover:text-white transition"
+                className="px-5 py-2.5 rounded-xl text-slate-700 font-bold hover:bg-slate-50 transition-all duration-200"
               >
-                Login
+                Sign in
               </Link>
 
               <Link
                 to="/signup"
-                className="px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition shadow"
+                className="px-6 py-2.5 rounded-xl bg-violet-600 text-white hover:bg-violet-700 transition-all duration-200 shadow-md shadow-violet-100 font-bold"
               >
-                Signup
+                Get Started
               </Link>
             </div>
           ) : (
-            <div className="flex items-center gap-4">
-              {/* Avatar */}
-              {/* <div className="flex items-center gap-2 bg-gray-100 px-3 py-1.5 rounded-full">
-                <User size={18} className="text-indigo-600" />
-                <span className="text-sm font-medium text-gray-700">
-                  {user.name || "User"}
-                </span>
-              </div> */}
-
+            <div className="flex items-center gap-6">
               <button
                 onClick={Logout}
-                className="flex items-center gap-1 px-4 py-2 rounded-lg bg-red-500 text-white hover:bg-red-600 transition shadow-sm"
+                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-900 text-white hover:bg-slate-800 transition-all duration-200 shadow-md font-bold text-sm"
               >
                 <LogOut size={16} />
-                Logout
+                Sign out
               </button>
             </div>
           )}
@@ -107,22 +100,22 @@ const Navbar = () => {
 
         {/* ===== Mobile Menu Button ===== */}
         <button
-          className="md:hidden text-gray-700"
+          className="md:hidden p-2 rounded-lg bg-slate-50 text-slate-700"
           onClick={() => setMenuOpen(!menuOpen)}
         >
-          {menuOpen ? <X size={26} /> : <Menu size={26} />}
+          {menuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
 
       {/* ===== Mobile Menu ===== */}
       {menuOpen && (
-        <div className="md:hidden bg-white border-t shadow-lg">
-          <ul className="flex flex-col px-6 py-4 gap-4 font-medium">
+        <div className="md:hidden bg-white/95 backdrop-blur-md border-t border-slate-100 shadow-xl animate-in slide-in-from-top duration-300">
+          <ul className="flex flex-col px-6 py-6 gap-6 font-semibold">
             <li>
               <Link
                 to="/"
                 onClick={() => setMenuOpen(false)}
-                className="text-gray-700 hover:text-indigo-600 transition"
+                className="text-slate-700 hover:text-violet-600 transition block text-lg"
               >
                 Home
               </Link>
@@ -133,7 +126,7 @@ const Navbar = () => {
                 <Link
                   to={`/dashboard/${user.userId}`}
                   onClick={() => setMenuOpen(false)}
-                  className="text-gray-700 hover:text-indigo-600 transition"
+                  className="text-slate-700 hover:text-violet-600 transition block text-lg"
                 >
                   Dashboard
                 </Link>
@@ -141,29 +134,33 @@ const Navbar = () => {
             )}
 
             {!user ? (
-              <>
+              <div className="flex flex-col gap-4 pt-2">
                 <Link
                   to="/login"
                   onClick={() => setMenuOpen(false)}
-                  className="px-4 py-2 rounded-lg border border-indigo-600 text-indigo-600 text-center"
+                  className="px-4 py-3 rounded-xl border border-slate-200 text-slate-700 text-center font-bold"
                 >
-                  Login
+                  Sign in
                 </Link>
 
                 <Link
                   to="/signup"
                   onClick={() => setMenuOpen(false)}
-                  className="px-4 py-2 rounded-lg bg-indigo-600 text-white text-center"
+                  className="px-4 py-3 rounded-xl bg-violet-600 text-white text-center font-bold"
                 >
-                  Signup
+                  Get Started
                 </Link>
-              </>
+              </div>
             ) : (
               <button
-                onClick={Logout}
-                className="px-4 py-2 rounded-lg bg-red-500 text-white"
+                onClick={() => {
+                  Logout();
+                  setMenuOpen(false);
+                }}
+                className="px-4 py-3 rounded-xl bg-slate-900 text-white font-bold flex items-center justify-center gap-2"
               >
-                Logout
+                <LogOut size={18} />
+                Sign out
               </button>
             )}
           </ul>
